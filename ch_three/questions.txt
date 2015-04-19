@@ -1,0 +1,1 @@
+in number nine - how can you distinguish names of organizations? I can pull out those phrases that have multiple capitalized words. But that seems shaky at best. How do you distinguish organization names from proper nouns more generally?
