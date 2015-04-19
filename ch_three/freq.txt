@@ -1,0 +1,6 @@
+this 76
+is 12
+my 324
+big 44
+fat 14
+file 64

@@ -1,1 +1,10 @@
 in number nine - how can you distinguish names of organizations? I can pull out those phrases that have multiple capitalized words. But that seems shaky at best. How do you distinguish organization names from proper nouns more generally?
+
+14. question about dot notation does it always rewrite the thing it's called upon?
+16. question re: what's imported when you pull in a module
+17 - get eric to run through 17 with you
+
+import nltk
+from nltk import tokenize
+
+are both of those necessary? Do you get tokenize when you import nltk?
