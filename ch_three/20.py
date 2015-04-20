@@ -3,9 +3,17 @@
 
 from urllib import request
 from bs4 import BeautifulSoup
+from nltk import word_tokenize
+import nltk
 
-url = "http://www.weather.com"
-response = request.urlopen(url)
-raw = response.read().decode('utf8')
+# scrapes the webpage and cleans out the html
+url = "http://www.accuweather.com/en/us/charlottesville-va/22902/weather-forecast/331243"
+html = request.urlopen(url).read().decode('utf8')
+raw = BeautifulSoup(html).get_text()
 
-text = BeautifulSoup(raw).get_text()
+# tokenizes the text
+tokens = word_tokenize(raw)
+
+# pulls out today's forecast
+tokens = tokens[7986:8038]
+text = nltk.Text(tokens)
