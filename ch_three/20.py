@@ -9,11 +9,17 @@ import nltk
 # scrapes the webpage and cleans out the html
 url = "http://www.accuweather.com/en/us/charlottesville-va/22902/weather-forecast/331243"
 html = request.urlopen(url).read().decode('utf8')
-raw = BeautifulSoup(html).get_text()
+soup = BeautifulSoup(html)
+today = soup.find(class_="info city-fcast-text")
+print(today.get_text())
 
-# tokenizes the text
-tokens = word_tokenize(raw)
+# raw = BeautifulSoup(html).get_text()
 
-# pulls out today's forecast
-tokens = tokens[7986:8038]
-text = nltk.Text(tokens)
+# # tokenizes the text
+# tokens = word_tokenize(raw)
+
+# print(html)
+# # pulls out today's forecast
+# tokens = tokens[7986:8038]
+# text = nltk.Text(tokens)
+
