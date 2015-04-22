@@ -4,7 +4,6 @@ import re
 from nltk import word_tokenize
 from nltk.corpus import words
 
-
 url = "https://forum.librivox.org/viewtopic.php?f=16&t=26004&start=0"
 posts =[]
 counter = 0
@@ -19,7 +18,10 @@ def scrape(url):
 	#gets the text of the posts and appends them to the posts list.
 	soup_posts = soup.find_all(class_="postbody")
 	for post in soup_posts:
-		posts.append(post.get_text())
+		post_text = post.get_text()
+		# only pulls in those posts not prefaced with underscores (because those are going to be user signatures)
+		if not re.findall(r'_+', post_text):
+			posts.append(post_text)
 
 
 def paginator(url, counter):
