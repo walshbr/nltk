@@ -8,3 +8,12 @@ import nltk
 from nltk import tokenize
 
 are both of those necessary? Do you get tokenize when you import nltk?
+
+in question 20 - is there a quicker way to find the place in the massive text
+I want than trial and error? The problem I was having was that I was searching
+through tokenized text, so I could only ever search one word at a time.
+I guess I could search for consecutive tokens?
+
+question 21 - I think the code is working…but it's pulling out some words that seem like it should have in the words corpus
+
+22 - just in general
