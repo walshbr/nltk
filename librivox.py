@@ -4,17 +4,26 @@ import re
 from nltk import word_tokenize
 from nltk.corpus import words
 import math
+import time
+import random
 
 url = "https://forum.librivox.org/viewtopic.php?f=16&t=26004&start=0"
 posts =[]
 counter = 0
+max_sleep = 2.0
+
+
+def download(url):
+    time.sleep(random.random() * max_sleep)
+    html = request.urlopen(url).read().decode('utf8')
+    return BeautifulSoup(html)
+
 
 def scrape_posts(url):
 	"""Scrapes Librivox posts and appends the content of each post to a list containing its posts"""
 	page_posts = []
 	#gets the url
-	html = request.urlopen(url).read().decode('utf8')
-	soup = BeautifulSoup(html)
+	soup = download(url)
 	
 	#gets the text of the posts and appends them to the posts list.
 	soup_posts = soup.find_all(class_="postbody")
@@ -46,8 +55,7 @@ def find_page_numbers(url):
 	"""Finds the number of pages in the post by pulling in the number of posts from the scraped thing."""
 
 	# pulls in the soup. should probably refactor this so it's not done twice.
-	html = request.urlopen(url).read().decode('utf8')
-	soup = BeautifulSoup(html)
+	soup = download(url)
 
 	# pulls in the things that have the class they are using for the tag.
 	tags = soup.find_all(class_='gensmall')
@@ -66,8 +74,7 @@ def find_number_of_topics(forum_url):
 	"""For a given forum it pulls out the number of topics."""
 	#should really be refactored so that it's a single function that identifies whether or not you're on an individual forums page or not.
 	# pulls in the soup. should probably refactor this so it's not done twice.
-	html = request.urlopen(forum_url).read().decode('utf8')
-	soup = BeautifulSoup(html)
+	soup = download(url)
 
 	# pulls in the things that have the class they are using for the tag.
 	tags = soup.find_all(class_='gensmall')
