@@ -3,14 +3,15 @@ from bs4 import BeautifulSoup
 import re
 from nltk import word_tokenize
 from nltk.corpus import words
+import math
 
 url = "https://forum.librivox.org/viewtopic.php?f=16&t=26004&start=0"
 posts =[]
 counter = 0
 
-def scrape(url):
-	"""Scrapes a Librivox post and appends the content of its posts to a list containing its posts"""
-
+def scrape_posts(url):
+	"""Scrapes Librivox posts and appends the content of each post to a list containing its posts"""
+	page_posts = []
 	#gets the url
 	html = request.urlopen(url).read().decode('utf8')
 	soup = BeautifulSoup(html)
@@ -21,7 +22,9 @@ def scrape(url):
 		post_text = post.get_text()
 		# only pulls in those posts not prefaced with underscores (because those are going to be user signatures)
 		if not re.findall(r'_+', post_text):
-			posts.append(post_text)
+			page_posts.append(post_text) 		
+	
+	return page_posts
 
 
 def paginator(url, counter):
@@ -56,19 +59,50 @@ def find_page_numbers(url):
 			number_of_posts = re.findall(r'\[\s([0-9]+)', tag)
 
 	# returns the number of pages by dividing the number of posts by the number of pages.
-	number_of_pages = int(number_of_posts[0]) / 15	
-	number_of_pages = int(number_of_pages)
+	number_of_pages = math.ceil(int(number_of_posts[0]) / 15)	
 	return number_of_pages
 
+def find_number_of_topics(forum_url):
+	"""For a given forum it pulls out the number of topics."""
+	#should really be refactored so that it's a single function that identifies whether or not you're on an individual forums page or not.
+	# pulls in the soup. should probably refactor this so it's not done twice.
+	html = request.urlopen(forum_url).read().decode('utf8')
+	soup = BeautifulSoup(html)
+
+	# pulls in the things that have the class they are using for the tag.
+	tags = soup.find_all(class_='gensmall')
+	tags = [tag.get_text() for tag in tags]
+
+	# does a regex over their tags to find the page number using the format they usually use. 
+	for tag in tags:
+		if re.findall(r'\[\s([0-9]+)', tag):
+			number_of_topics = re.findall(r'\[\s([0-9]+)', tag)
+
+	# returns the number of topics by dividing the number of posts by the number of pages.
+	number_of_pages = math.ceil(int(number_of_topics[0]) / 50)	
+	return number_of_pages
+
+
 #finds the number of pages
-num_pages = find_page_numbers(url)
 
-#scrapes the posts for each page in the forum.
-while counter < num_pages:
-	url = paginator(url, counter)
-	scrape(url)
-	counter += 1
+def scrape_forum(forum_url):
+	"""scrapes a forum"""
+	forum_posts =[]
+	counter = 0
+	num_pages = find_page_numbers(forum_url)
 
-# prints the number of posts	
-print(posts)
+	# assigns the forum urls start
+	url = forum_url + '&start=0'
+
+	#scrapes the posts for each page in the forum.
+	while counter < num_pages:
+		url = paginator(url, counter)
+		posts = scrape_posts(url)
+		for post in posts:
+			forum_posts.append(post)
+		counter += 1
+
+	return forum_posts
+
+print(scrape_forum('https://forum.librivox.org/viewtopic.php?f=16&t=26004'))
 
