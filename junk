@@ -1,0 +1,26 @@
+
+def find_number_of_pages_or_topics(forum_url):
+	"""For a given forum it pulls out the number of topics."""
+	#should really be refactored so that it's a single function that identifies whether or not you're on an individual forums page or not.
+	# pulls in the soup. should probably refactor this so it's not done twice.
+	html = request.urlopen(forum_url).read().decode('utf8')
+	soup = BeautifulSoup(html)
+
+	# pulls in the things that have the class they are using for the tag.
+	tags = soup.find_all(class_='gensmall')
+	tags = [tag.get_text() for tag in tags]
+
+	# does a regex over their tags to find the page number using the format they usually use. 
+	
+
+	for tag in tags:
+		if re.findall(r'\[\s([0-9]+)', tag) and re.findall(r'topics', tag):
+			number_of_topics = re.findall(r'\[\s([0-9]+)', tag)
+			number_of_pages = math.ceil(int(number_of_topics[0]) / 50)
+
+		elif re.findall(r'\[\s([0-9]+)', tag) and re.findall(r'posts', tag):
+			number_of_posts = re.findall(r'\[\s([0-9]+)', tag)
+			number_of_pages = math.ceil(int(number_of_posts[0]) / 15)
+
+		else:
+			print("not a valid thing to scrape")
