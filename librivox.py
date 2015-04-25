@@ -7,7 +7,6 @@ import math
 import time
 import random
 
-url = "https://forum.librivox.org/viewtopic.php?f=16&t=26004&start=0"
 posts =[]
 counter = 0
 max_sleep = 2.0
@@ -51,27 +50,8 @@ def paginator(url, counter):
 
 # calls down a url using the paginator function and adds one to the counter each time, paginating through the forum and adding to the posts collection as it goes.
 
-def find_page_numbers(url):
-	"""Finds the number of pages in the post by pulling in the number of posts from the scraped thing."""
-
-	# pulls in the soup. should probably refactor this so it's not done twice.
-	soup = download(url)
-
-	# pulls in the things that have the class they are using for the tag.
-	tags = soup.find_all(class_='gensmall')
-	tags = [tag.get_text() for tag in tags]
-
-	# does a regex over their tags to find the page number using the format they usually use. 
-	for tag in tags:
-		if re.findall(r'\[\s([0-9]+)', tag):
-			number_of_posts = re.findall(r'\[\s([0-9]+)', tag)
-
-	# returns the number of pages by dividing the number of posts by the number of pages.
-	number_of_pages = math.ceil(int(number_of_posts[0]) / 15)	
-	return number_of_pages
-
-def find_number_of_topics(forum_url):
-	"""For a given forum it pulls out the number of topics."""
+def find_number_of_pages_or_topics(url):
+	"""For a given forum or topic it pulls out the number of pages that need to be spidered."""
 	#should really be refactored so that it's a single function that identifies whether or not you're on an individual forums page or not.
 	# pulls in the soup. should probably refactor this so it's not done twice.
 	soup = download(url)
@@ -82,11 +62,15 @@ def find_number_of_topics(forum_url):
 
 	# does a regex over their tags to find the page number using the format they usually use. 
 	for tag in tags:
-		if re.findall(r'\[\s([0-9]+)', tag):
-			number_of_topics = re.findall(r'\[\s([0-9]+)', tag)
 
-	# returns the number of topics by dividing the number of posts by the number of pages.
-	number_of_pages = math.ceil(int(number_of_topics[0]) / 50)	
+			if re.findall(r'\[\s([0-9]+)\stopics', tag):
+				number_of_topics = re.findall(r'\[\s([0-9]+)', tag)
+				number_of_pages = math.ceil(int(number_of_topics[0]) / 50)
+
+			elif re.findall(r'\[\s([0-9]+\sposts)', tag):
+				number_of_posts = re.findall(r'\[\s([0-9]+)', tag)
+				number_of_pages = math.ceil(int(number_of_posts[0]) / 15)
+	
 	return number_of_pages
 
 
@@ -111,5 +95,5 @@ def scrape_forum(forum_url):
 
 	return forum_posts
 
-print(scrape_forum('https://forum.librivox.org/viewtopic.php?f=16&t=26004'))
+# print(scrape_forum('https://forum.librivox.org/viewtopic.php?f=16&t=26004'))
 
