@@ -10,7 +10,7 @@ import random
 posts =[]
 counter = 0
 max_sleep = 2.0
-
+post_counter = 1
 
 def download(url):
     time.sleep(random.random() * max_sleep)
@@ -76,8 +76,13 @@ def find_number_of_pages_or_topics(url):
 
 def scrape_topic(topic_url):
 	"""scrapes all posts from a topic"""
-	topic_posts =[]
+	output = open('output.txt', 'a')
 	counter = 0
+	global post_counter
+
+	# a counter to show the progress through the given topic
+
+
 	num_pages = find_number_of_pages_or_topics(topic_url)
 
 	# assigns the forum urls start
@@ -88,10 +93,12 @@ def scrape_topic(topic_url):
 		url = paginator(url, counter, 15)
 		posts = scrape_posts(url)
 		for post in posts:
-			topic_posts.append(post)
+			output.write(str(post) + '\n\n\n')
+			print(url + '    ' + str(post_counter))
+			post_counter += 1
 		counter += 1
 
-	return topic_posts
+	output.close	
 
 def get_all_topic_links_in_a_forum(forum_url):
 	"""gets all the topic links in a forum."""
@@ -132,17 +139,41 @@ def get_topic_links_for_a_page(forum_url):
 		clean_links.append(new_link)
 	return clean_links
 
-
-
 def scrape_forum(forum_url):
+	"""Scrapes all the topics for a given forum."""
 	forum_posts = []
 	forum_links = get_all_topic_links_in_a_forum(forum_url)
-	for link in forum_links:
-		posts = scrape_topic(link)
-		for post in posts:
-			forum_posts.append(post)
-	return forum_posts
 
-scrape_forum('https://forum.librivox.org/viewforum.php?f=18')
+	# for every topic in a forum, scrape all the posts and put it in a single list.
+	for link in forum_links:
+		scrape_topic(link)
+
+def scrape_everything():
+	"""scrapes everything. punch it chewie."""
+
+	forum_urls = []
+	# pulls in the main index page
+
+	soup = download('https://forum.librivox.org/index.php')
+	first_round = soup.find_all(class_='forumlink')
+
+	# regexes for cleaning the urls
+	beginning_pattern = re.compile(r'^\.')
+	end_pattern = re.compile(r'&sid=.+$')
+
+
+	for link in first_round:
+		# for every link on the main index page, clean it to be a well-formed link that will lead to a particular forum page.
+		url = link.get('href')
+		clean_url = end_pattern.sub('', url)
+		clean_url = beginning_pattern.sub('https://forum.librivox.org', clean_url)
+		forum_urls.append(clean_url)
+
+	for link in forum_urls:
+		scrape_forum(link)
+
+scrape_everything()
+
+# scrape_forum('https://forum.librivox.org/viewforum.php?f=18')
 
 
