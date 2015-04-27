@@ -35,13 +35,13 @@ def scrape_posts(url):
 	return page_posts
 
 
-def paginator(url, counter):
+def paginator(url, counter, per_page):
 
 	# need a regex to find the last number of the url, the pagination number.
 	pattern = re.compile(r'[0-9]+$')
 
 	# initializes the counter.
-	new_count = str(counter * 15)
+	new_count = str(counter * per_page)
 	if new_count == 0:
 		return url
 	# substitutes in the counter at the point in the strig.
@@ -64,36 +64,54 @@ def find_number_of_pages_or_topics(url):
 	# does a regex over their tags to find the number of pages using the format they usually use. 
 	for tag in tags:
 
-			if re.findall(r'\[\s([0-9]+)\stopics', tag):
-				number_of_topics = re.findall(r'\[\s([0-9]+)', tag)
-				number_of_pages = math.ceil(int(number_of_topics[0]) / 50)
+		if re.findall(r'\[\s([0-9]+)\stopic', tag):
+			number_of_topics = re.findall(r'\[\s([0-9]+)', tag)
+			number_of_pages = math.ceil(int(number_of_topics[0]) / 50)
 
-			elif re.findall(r'\[\s([0-9]+\sposts)', tag):
-				number_of_posts = re.findall(r'\[\s([0-9]+)', tag)
-				number_of_pages = math.ceil(int(number_of_posts[0]) / 15)
+		elif re.findall(r'\[\s([0-9]+\spost)', tag):
+			number_of_posts = re.findall(r'\[\s([0-9]+)', tag)
+			number_of_pages = math.ceil(int(number_of_posts[0]) / 15)
 	
 	return number_of_pages
 
-def scrape_forum(forum_url):
-	"""scrapes all posts from a forum"""
-	forum_posts =[]
+def scrape_topic(topic_url):
+	"""scrapes all posts from a topic"""
+	topic_posts =[]
 	counter = 0
-	num_pages = find_number_of_pages_or_topics(forum_url)
+	num_pages = find_number_of_pages_or_topics(topic_url)
 
 	# assigns the forum urls start
-	url = forum_url + '&start=0'
+	url = topic_url + '&start=0'
 
 	#scrapes the posts for each page in the forum.
 	while counter < num_pages:
-		url = paginator(url, counter)
+		url = paginator(url, counter, 15)
 		posts = scrape_posts(url)
 		for post in posts:
-			forum_posts.append(post)
+			topic_posts.append(post)
 		counter += 1
 
-	return forum_posts
+	return topic_posts
 
-def get_topic_links(forum_url):
+def get_all_topic_links_in_a_forum(forum_url):
+	"""gets all the topic links in a forum."""
+	links = []
+	counter = 0
+	num_pages = find_number_of_pages_or_topics(forum_url)
+	
+	url = forum_url + '&t='
+
+	while counter < num_pages:
+		url = paginator(url, counter, 50)
+		page_links = get_topic_links_for_a_page(forum_url)
+		for link in page_links:
+			links.append(link)
+		counter += 1
+
+	return(links)
+	
+
+def get_topic_links_for_a_page(forum_url):
 	"""Gets all of the links for the topics contained in a forum."""
 	# note: it only does this for one page. You need to paginate
 	raw_links = []
@@ -115,9 +133,16 @@ def get_topic_links(forum_url):
 	return clean_links
 
 
-def scrape_all_topics(forum_url):
-	"""Scrapes all the topics in a forum."""
 
-print(get_topic_links('https://forum.librivox.org/viewforum.php?f=16'))
+def scrape_forum(forum_url):
+	forum_posts = []
+	forum_links = get_all_topic_links_in_a_forum(forum_url)
+	for link in forum_links:
+		posts = scrape_topic(link)
+		for post in posts:
+			forum_posts.append(post)
+	return forum_posts
+
+scrape_forum('https://forum.librivox.org/viewforum.php?f=18')
 
 
