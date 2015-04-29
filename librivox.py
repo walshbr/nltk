@@ -151,7 +151,8 @@ def get_urls(soup, class_):
         urls.append(url)
     return urls
 
-scrape_everything()
+if __name__ == '__main__':
+    scrape_everything()
 
 # scrape_forum('https://forum.librivox.org/viewforum.php?f=18')
 
