@@ -95,7 +95,7 @@ def find_number_of_pages_or_topics(url):
 
         return number_of_pages
 
-def scrape_topic(topic_url):
+def scrape_topic(forum_id, forum_name, topic_url, topic_id, topic_name):
         """scrapes all posts from a topic"""
         output = open('output.txt', 'a')
         counter = 0
@@ -114,7 +114,12 @@ def scrape_topic(topic_url):
                 url = paginator(url, counter, 15)
                 posts = scrape_posts(url)
                 for post in posts:
-                        output.write(str(post) + '\n\n\n')
+                        output.write('\t'.join([
+                            str(forum_id), forum_name,
+                            str(topic_id), topic_name,
+                            str(post.replace('\t', ' ')),
+                            ]))
+                        output.write('\n\n\n')
                         print(url + '    ' + str(post_counter))
                         post_counter += 1
                 counter += 1
@@ -132,8 +137,7 @@ def get_all_topic_links_in_a_forum(forum_url):
         while counter < num_pages:
                 url = paginator(url, counter, 50)
                 page_links = get_topic_links_for_a_page(forum_url)
-                for link in page_links:
-                        links.append(link)
+                links.extend(page_links)
                 counter += 1
 
         return(links)
@@ -143,21 +147,21 @@ def get_topic_links_for_a_page(forum_url):
         """Gets all of the links for the topics contained in a forum."""
         # note: it only does this for one page. You need to paginate
         # pulls in all the raw links with the topic title class.
-        return [link for (link, _, _) in get_urls(download(forum_url), 'topictitle', 't')]
+        return get_urls(download(forum_url), 'topictitle', 't')
 
-def scrape_forum(forum_url):
+def scrape_forum(forum_url, forum_id, forum_name):
         """Scrapes all the topics for a given forum."""
 
         # for every topic in a forum, scrape all the posts and put it in a single list.
-        for link in get_all_topic_links_in_a_forum(forum_url):
-                scrape_topic(link)
+        for link_info in get_all_topic_links_in_a_forum(forum_url):
+                scrape_topic(forum_id, forum_name, *link_info)
 
 def scrape_everything():
         """scrapes everything. punch it chewie."""
         # pulls in the main index page
         soup = download('https://forum.librivox.org/index.php')
-        for (link, _, _) in get_urls(soup, 'forumlink', 'f'):
-                scrape_forum(link)
+        for forum_info in get_urls(soup, 'forumlink', 'f'):
+                scrape_forum(*forum_info)
 
 if __name__ == '__main__':
     scrape_everything()
