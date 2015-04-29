@@ -1,4 +1,5 @@
 from urllib import request
+from urllib import parse as urlparse
 from bs4 import BeautifulSoup
 import re
 from nltk import word_tokenize
@@ -16,6 +17,26 @@ def download(url):
     time.sleep(random.random() * max_sleep)
     html = request.urlopen(url).read().decode('utf8')
     return BeautifulSoup(html)
+
+
+def get_urls(soup, class_, key):
+    """ Returns a tuple (URL, ID, text). """
+    begin_pattern = re.compile(r'^\.')
+    end_pattern = re.compile(r'&sid=.+$')
+    urls = []
+    for a in soup.find_all(class_=class_):
+        url = a.get('href')
+        if not url:
+            continue
+        url = end_pattern.sub('', url)
+        url = begin_pattern.sub('https://forum.librivox.org', url)
+        # Parse the URL to get the page's identifier.
+        urlp = urlparse.urlparse(url)
+        qs = urlparse.parse_qs(urlp.query)
+        ids = [int(url_id) for url_id in qs.get(key, ['-1'])]
+
+        urls.append((url, ids[0], a.get_text()))
+    return urls
 
 
 def scrape_posts(url):
@@ -122,7 +143,7 @@ def get_topic_links_for_a_page(forum_url):
         """Gets all of the links for the topics contained in a forum."""
         # note: it only does this for one page. You need to paginate
         # pulls in all the raw links with the topic title class.
-        return get_urls(download(forum_url), 'topictitle')
+        return [link for (link, _, _) in get_urls(download(forum_url), 'topictitle', 't')]
 
 def scrape_forum(forum_url):
         """Scrapes all the topics for a given forum."""
@@ -135,21 +156,8 @@ def scrape_everything():
         """scrapes everything. punch it chewie."""
         # pulls in the main index page
         soup = download('https://forum.librivox.org/index.php')
-        for link in get_urls(soup, 'forumlink'):
+        for (link, _, _) in get_urls(soup, 'forumlink', 'f'):
                 scrape_forum(link)
-
-def get_urls(soup, class_):
-    begin_pattern = re.compile(r'^\.')
-    end_pattern = re.compile(r'&sid=.+$')
-    urls = []
-    for a in soup.find_all(class_=class_):
-        url = a.get('href')
-        if not url:
-            continue
-        url = end_pattern.sub('', url)
-        url = begin_pattern.sub('https://forum.librivox.org', url)
-        urls.append(url)
-    return urls
 
 if __name__ == '__main__':
     scrape_everything()
