@@ -66,11 +66,12 @@ def enqueue_urls(cxn, urls):
     with closing(cxn.cursor()) as c:
         print('enqueue_urls: {}'.format(urls))
         c.executemany(
-            '''INSERT INTO urls
+            '''INSERT OR IGNORE INTO urls
                 (level, url, parent_url_id, text)
                 VALUES (?, ?, ?, ?);''',
             urls,
             )
+        print('ENQUEUED {}'.format(c.rowcount))
 
 
 def get_enqueue_urls(cxn, soup, class_, key, parent_id):
@@ -235,7 +236,7 @@ def open_db(filename):
             c.executescript('''
                 CREATE TABLE urls (
                     id INTEGER PRIMARY KEY,
-                    url TEXT,
+                    url TEXT UNIQUE NOT NULL,
                     parent_url_id INTEGER,
                     level TEXT,
                     text TEXT,
