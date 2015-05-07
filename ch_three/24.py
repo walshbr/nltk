@@ -11,8 +11,43 @@ raw = f.read()
 # lowercases the text
 raw = raw.lower()
 
-# regex that searches through the text to find instances of the letters to be converted.
-pattern = re.compile(r'[eiols]|ate')
 
 
-# print(pattern.sub('', raw))
+def convert_to_hacker(text):
+	"""converts a text to hacker"""
+	new_text = []
+
+	#initial pass subsitutes 8 for ate.
+	pattern = re.compile(r'ate')
+	text = pattern.sub('8', text) 
+
+	# regex that searches through the text to find instances of the letters to be converted.
+	pattern = re.compile(r'[eiols]|\.')
+
+
+	# converts all the letters
+	for w in text:
+		if re.search(pattern, w):
+			if w == 'e':
+				w = '3'
+			elif w == 'i':
+				w = '1'
+			elif w == 'o':
+				w = '0'
+			elif w == 's':
+				w = '5'
+			elif w == 'l':
+				w = '|'
+			elif w == '.':
+				w = '5w33t!'
+		new_text.extend(w)
+	new_text = ''.join(new_text)
+
+	# regex searching for word initial s.
+	pattern = re.compile(r'\b5')
+	new_text = pattern.sub('$', new_text)
+
+	return new_text
+
+text = convert_to_hacker(raw)
+print(text)
