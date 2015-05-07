@@ -221,6 +221,7 @@ def scrape_everything():
             try:
                 work = get_work(cxn)
                 if work is None:
+                    cxn.commit()
                     break
                 print('WORK: {}'.format(work))
 
