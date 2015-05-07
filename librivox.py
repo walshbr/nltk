@@ -51,6 +51,7 @@ def get_work(cxn):
             SELECT id, url, level
                 FROM urls
                 WHERE scraped IS NULL
+                ORDER BY added DESC
                 LIMIT 1;
             ''')
         work = c.fetchone()
@@ -63,7 +64,6 @@ def get_work(cxn):
 def enqueue_urls(cxn, urls):
     """This takes the output of get_urls and inserts them into the db."""
     with closing(cxn.cursor()) as c:
-        print('enqueue_urls: {}'.format(urls))
         c.executemany(
             '''INSERT OR IGNORE INTO urls
                 (level, url, parent_url_id, text)
@@ -149,7 +149,7 @@ def find_number_of_pages_or_topics(url):
 def insert_posts(cxn, posts):
     """Take the output of scrape_topic and insert it into the posts."""
     with closing(cxn.cursor()) as c:
-        c.executemany('INSERT INTO postings (url_id, text) AS (?, ?);', posts)
+        c.executemany('INSERT INTO postings (url_id, text) VALUES (?, ?);', posts)
 
 
 def scrape_topic(topic_url, topic_id):
