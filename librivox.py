@@ -12,7 +12,7 @@ import os
 posts = []
 counter = 0
 max_sleep = 2.0
-post_counter = 1
+session_post_counter = 0
 
 FORUM = 'f'
 TOPIC = 't'
@@ -86,7 +86,6 @@ def scrape_posts(url):
     page_posts = []
     # gets the url
     soup = download(url)
-    print('DOWNLOAD {}'.format(url))
 
     # gets the text of the posts and appends them to the posts list.
     soup_posts = soup.find_all(class_="postbody")
@@ -139,12 +138,12 @@ def find_number_of_pages_or_topics(url):
         if re.findall(r'\[\s([0-9]+)\stopic', tag):
             number_of_topics = re.findall(r'\[\s([0-9]+)', tag)
             number_of_pages = math.ceil(int(number_of_topics[0]) / 50)
+            return number_of_pages
 
         elif re.findall(r'\[\s([0-9]+\spost)', tag):
             number_of_posts = re.findall(r'\[\s([0-9]+)', tag)
             number_of_pages = math.ceil(int(number_of_posts[0]) / 15)
-
-    return number_of_pages
+            return number_of_pages, number_of_posts[0]
 
 
 def insert_posts(cxn, posts):
@@ -157,24 +156,33 @@ def scrape_topic(topic_url, topic_id):
     """scrapes all posts from a topic"""
     output = []
     counter = 0
-    global post_counter
+    global session_post_counter
+    topic_post_counter = 0
 
     # a counter to show the progress through the given topic
-    num_pages = find_number_of_pages_or_topics(topic_url)
+    num_pages, num_posts = find_number_of_pages_or_topics(topic_url)
 
     # assigns the forum urls start
     url = topic_url + '&start=0'
-
+    print('DOWNLOAD {}'.format(url))
+    print("Number of Posts in Topic:    " + str(num_posts))
     # scrapes the posts for each page in the forum.
     while counter < num_pages:
         url = paginator(url, counter, 15)
         posts = scrape_posts(url)
+    
         for post in posts:
+            topic_post_counter += 1
             output.append((str(topic_id), str(post).replace('\t', ' ')))
-            print(url + '    ' + str(post_counter))
-            post_counter += 1
+            print("Scraping post:    " + str(topic_post_counter))
         counter += 1
 
+    # checks to make sure there is no lost data. raises exception if there is.
+    if int(topic_post_counter) != int(num_posts):
+        raise ValueError("Scraped number of topics is not equal to number of topics for URL: " + url + ". Total posts: " + str(num_posts) + ". Scraped posts: " + str(topic_post_counter))
+    session_post_counter += int(topic_post_counter)
+    print("Total posts this session:    " + str(session_post_counter))
+    print("=======")
     return output
 
 
