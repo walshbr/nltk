@@ -18,8 +18,9 @@ FORUM = 'f'
 TOPIC = 't'
 
 
-def download(url):
-    time.sleep(random.random() * max_sleep)
+def download(url, sleep=True):
+    if sleep:
+        time.sleep(random.random() * max_sleep)
     html = request.urlopen(url).read().decode('utf8', errors='replace')
     return BeautifulSoup(html)
 
@@ -125,7 +126,7 @@ def find_number_of_pages_or_topics(url):
     # identifies whether or not you're on an individual forums page or not.
     #
     # pulls in the soup. should probably refactor this so it's not done twice.
-    soup = download(url)
+    soup = download(url, False)
 
     # pulls in the things that have the class they are using for the tag.
     tags = soup.find_all(class_='gensmall')
