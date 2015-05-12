@@ -20,7 +20,6 @@ TOPIC = 't'
 
 def download(url):
     time.sleep(random.random() * max_sleep)
-    print('DOWNLOAD {}'.format(url))
     html = request.urlopen(url).read().decode('utf8', errors='replace')
     return BeautifulSoup(html)
 
@@ -86,16 +85,17 @@ def scrape_posts(url):
     page_posts = []
     # gets the url
     soup = download(url)
+    print('DOWNLOAD {}'.format(url))
 
     # gets the text of the posts and appends them to the posts list.
     soup_posts = soup.find_all(class_="postbody")
     for post in soup_posts:
-        post_text = post.get_text()
+        post_string = str(post)
         # only pulls in those posts not prefaced with underscores (because
         # those are going to be user signatures)
-        if not re.findall(r'_+', post_text):
+        if not re.findall(r'<br/>_________________<br/>', post_string):
+            post_text = post.get_text()
             page_posts.append(post_text)
-
     return page_posts
 
 
