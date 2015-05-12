@@ -179,9 +179,9 @@ def scrape_topic(topic_url, topic_id):
 
     # checks to make sure there is no lost data. raises exception if there is.
     if int(topic_post_counter) != int(num_posts):
-        output = open('errors.txt', 'a')
-        output.write("Scraped number of topics is not equal to number of topics for URL: " + url + ". Total posts: " + str(num_posts) + ". Scraped posts: " + str(topic_post_counter) + '\n')
-        output.close()
+        errors = open('errors.txt', 'a')
+        errors.write("Scraped number of topics is not equal to number of topics for URL: " + url + ". Total posts: " + str(num_posts) + ". Scraped posts: " + str(topic_post_counter) + '\n')
+        errors.close()
     session_post_counter += int(topic_post_counter)
     print("Total posts this session:    " + str(session_post_counter))
     print("=======")
