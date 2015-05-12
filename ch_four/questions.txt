@@ -1,0 +1,29 @@
+a little confused about variable referencing here.
+
+
+ 	
+>>> def set_up(word, properties):
+...     word = 'lolcat'
+...     properties.append('noun')
+...     properties = 5
+...
+>>> w = ''
+>>> p = []
+>>> set_up(w, p)
+>>> w
+''
+>>> p
+['noun']
+
+Let's look at what happened with the list p. When we called set_up(w, p), ^^^^the value of p (a reference to an empty list) was assigned to a new local variable properties^^^^, so both variables now reference the same memory location. The function modifies properties, and this change is also reflected in the value of p as we saw. The function also assigned a new value to properties (the number 5); this did not modify the contents at that memory location, but created a new local variable. This behavior is just as if we had done the following sequence of assignments:
+
+(the carret section is the confusing bit)
+ 	
+>>> p = []
+>>> properties = p
+>>> properties.append('noun')
+>>> properties = 5
+>>> p
+['noun']
+
+seems like it might be dropping posts - https://forum.librivox.org/viewtopic.php?f=16&t=36802&sid=31ba5103093f281f8465fead1b48e244&start=60 - it's only printing out the url maybe 11/12 times even though there are 15 posts to a page. check it out
