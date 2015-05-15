@@ -19,8 +19,8 @@ TOPIC = 't'
 
 
 def download(url, sleep=True):
-    if sleep:
-        time.sleep(random.random() * max_sleep)
+    # if sleep:
+    #     time.sleep(random.random() * max_sleep)
     html = request.urlopen(url).read().decode('utf8', errors='replace')
     return BeautifulSoup(html)
 
@@ -180,7 +180,7 @@ def scrape_topic(topic_url, topic_id):
     # checks to make sure there is no lost data. raises exception if there is.
     if int(topic_post_counter) != int(num_posts):
         errors = open('errors.txt', 'a')
-        errors.write("Scraped number of topics is not equal to number of topics for URL: " + url + ". Total posts: " + str(num_posts) + ". Scraped posts: " + str(topic_post_counter) + '\n')
+        errors.write("Scraped number of topics is not equal to number of topics for URL: " + url + ". Total posts: " + str(num_posts) + ". Scraped posts: " + str(topic_post_counter) + '\n\n')
         errors.close()
     session_post_counter += int(topic_post_counter)
     print("Total posts this session:    " + str(session_post_counter))
