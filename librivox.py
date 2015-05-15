@@ -17,6 +17,8 @@ session_post_counter = 0
 FORUM = 'f'
 TOPIC = 't'
 
+LIBRIVOX_DB = 'librivox.db'
+
 
 def download(url, sleep=True):
     # if sleep:
@@ -223,7 +225,7 @@ def scrape_forum(forum_url, forum_id):
 def scrape_everything():
     """scrapes everything. punch it chewie."""
     # pulls in the main index page
-    with open_db('librivox.db') as cxn:
+    with open_db(LIBRIVOX_DB) as cxn:
         soup = download('https://forum.librivox.org/index.php')
         get_enqueue_urls(cxn, soup, 'forumlink', FORUM, None)
         cxn.commit()
