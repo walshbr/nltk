@@ -1,29 +1,15 @@
-a little confused about variable referencing here.
+__add__(self, value, /)
+am i right in thinking that those are just regular functions? and you can call them like that? what is with the underscores? some correspond to other functions that look more familiar, right - x.__getitem__(y) is just a long-winded way of saying x[y].
 
+or would you call __add__(self, value) as word.add if word was a tuple?
 
- 	
->>> def set_up(word, properties):
-...     word = 'lolcat'
-...     properties.append('noun')
-...     properties = 5
-...
->>> w = ''
->>> p = []
->>> set_up(w, p)
->>> w
-''
->>> p
-['noun']
+2 - see question in context
+3 - double check my answer to a logic question about tuples.
+4 - what is "tuple assignment?" I think it's a question of how to parse the question
 
-Let's look at what happened with the list p. When we called set_up(w, p), ^^^^the value of p (a reference to an empty list) was assigned to a new local variable properties^^^^, so both variables now reference the same memory location. The function modifies properties, and this change is also reflected in the value of p as we saw. The function also assigned a new value to properties (the number 5); this did not modify the contents at that memory location, but created a new local variable. This behavior is just as if we had done the following sequence of assignments:
+-----
+12 problem
 
-(the carret section is the confusing bit)
- 	
->>> p = []
->>> properties = p
->>> properties.append('noun')
->>> properties = 5
->>> p
-['noun']
+14 - it's working, but the answers are different every time. or at least they seem to be the same answers but in a different order. is that because a set is not structured? so the computer just goes through and pulls stuff out in whatever order it wants? so the answers are diff. each time?
 
-seems like it might be dropping posts - https://forum.librivox.org/viewtopic.php?f=16&t=36802&sid=31ba5103093f281f8465fead1b48e244&start=60 - it's only printing out the url maybe 11/12 times even though there are 15 posts to a page. check it out
+i've noticed in my solutions to some of these i am having to do a LOT of str() and int()…type casting? is that what's it called? Is that alright? it feels like it's sort of a function of poorly planned functions. i'm just coding as i go and i have to do that to write my way out of traps in the end.

@@ -33,7 +33,7 @@ def adjacent_check(word):
 
 	#If two or more letters with the same number are adjacent in the original name (before step 1), only retain the first letter
 
-	adjacent_conversion = ['(.)\1', '']
+	adjacent_conversion = [r'(.)\1', '']
 	# problem i'm getting here = it's giving \0x1 because it's not being passed a raw string. thoughts?
 	
 	# tried making it take the raw string, but it's responding with "sre_constants.error: cannot refer to open group"

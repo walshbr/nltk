@@ -52,5 +52,5 @@ def sem_index(text):
     return word_with_syns
 
 sem_index_nums = sem_index(text)
-print(sem_index_nums['0:100'])
+print(sem_index_nums[0:100])
 # text_with_index = [], [(sem_index, word) for tup in sem_index_nums]

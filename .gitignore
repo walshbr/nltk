@@ -1,3 +1,6 @@
 output.txt
+/output
+librivox.db
+errors.txt
 __pycache__
 *.pyc
