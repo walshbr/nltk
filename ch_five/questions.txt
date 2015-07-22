@@ -1,0 +1,5 @@
+explain what nltk.Index is? I get that it is basically the same thing as defaultdict(list). but can i just get an example of how the syntax would work?
+
+can we just go over the last bit of 11? The part where it asks you to experiment with the parameters for the affix tagger? I get it conceptually, but practically I'm not quite sure what would be a best practice for working with them
+
+16 - the sample code they give (code_baseline_tagger keeps getting an error saying that nltk is not found, even though it's already imported. i tried adding it in several different places. a scoping issue?)
