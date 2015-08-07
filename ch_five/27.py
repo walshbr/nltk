@@ -1,11 +1,16 @@
 # ◑ Inspect the confusion matrix for the bigram tagger t2 defined in 5, and identify one or more sets of tags to collapse. Define a dictionary to do the mapping, and evaluate the tagger on the simplified data.
 
+#imports 
 import nltk
 from nltk.corpus import brown
+
+# getting the data ready
 brown_tagged_sents = brown.tagged_sents(categories='news')
 size = int(len(brown_tagged_sents) * 0.9)
 train_sents = brown_tagged_sents[:size]
 test_sents = brown_tagged_sents[size:]
+
+# prepping the taggers
 
 t0 = nltk.DefaultTagger('NN')
 t1 = nltk.UnigramTagger(train_sents, backoff=t0)
