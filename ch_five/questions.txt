@@ -7,4 +7,4 @@ AttributeError: 'LazySubsequence' object has no attribute 'get'
 
 27.
 
-Check out what I produced. It appears like simplifying tag systems makes the tagger less accurate - 
+Check out what I produced. It appears like simplifying tag systems makes the tagger less accurate. Does that make sense? because the bigrams rely on context. and so simplifying those contexts make it less accurate?
