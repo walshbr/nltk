@@ -4,3 +4,14 @@ librivox.db
 errors.txt
 __pycache__
 *.pyc
+errors.txt
+inferred_sample
+librivox.db
+output.mallet
+output/
+sample.mallet
+sample/
+topic-state.gz
+topic_keys.txt
+topics.tx
+topics.txt

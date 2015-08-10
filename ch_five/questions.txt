@@ -1,0 +1,10 @@
+After July 22 Meetings
+
+Question 24 second part - on estimating the size of training data needed given a particular vocabulary and tagset size.
+
+Question 25 - seems like there is something different about the floresta/portuguese library. Seems like it should be working, but I'm getting this - 
+AttributeError: 'LazySubsequence' object has no attribute 'get'
+
+27.
+
+Check out what I produced. It appears like simplifying tag systems makes the tagger less accurate. Does that make sense? because the bigrams rely on context. and so simplifying those contexts make it less accurate?
