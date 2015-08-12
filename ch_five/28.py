@@ -14,7 +14,7 @@ for sent in brown_tagged_sents:
     sent_to_append = []
     for (word, tag) in sent:
         sent_to_append.append((word, tag[0]))
-    simplified_tagged_sents.append(sent)
+    simplified_tagged_sents.append(sent_to_append)
 
 size = int(len(simplified_tagged_sents) * 0.9)
 train_sents = simplified_tagged_sents[:size]

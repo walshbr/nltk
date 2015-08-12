@@ -16,10 +16,10 @@ test_sents = brown_tagged_sents[size:]
 def collapse(sentences_to_collapse):
 	"""converts according to the conversion dictionary. collapses tags into a single category"""
 
-	conversion_dict = {'NNS': 'NN', 'NN-HL':'NN', 'NN-NC':'NN-TL'}
+	conversion_dict = {'NNS': 'NN', 'NN-HL':'NN', 'NN-NC': 'NN', 'NN-TL': 'NN'}
 	# produces all the tags for the test data
 	new_tagged_sents = []
-
+	
 	for sent in sentences_to_collapse:
 		new_sent = []
 		for word in sent:

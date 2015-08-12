@@ -1,42 +1,12 @@
-After July 22 Meetings
+After August 12 meeting
 
-Could talk spotify. also the dev job
+30 - double-check that this is the correct answer for why a default and lookup tagger are needed.
 
-Question 24 second part - on estimating the size of training data needed given a particular vocabulary and tagset size.
-
-Question 25 - seems like there is something different about the floresta/portuguese library. Seems like it should be working, but I'm getting this - 
-AttributeError: 'LazySubsequence' object has no attribute 'get'
-
-27.
-
-Check out what I produced. It appears like simplifying tag systems makes the tagger less accurate. Does that make sense? because the bigrams rely on context. and so simplifying those contexts make it less accurate?
-
-28 - I'm trying to modify a tagset. Can we talk a bit about what input taggers take? they seem to want to take sentences. that seems weird to me. is there are a reason for that? Also I'm running into errors generating my own training sets (or even modifying extant tagsets) - I can't quite seem to get the input that they want. Do they tend to work with sentence boundaries because that is where context gets determined? ie. - you wouldn't want a bigram that crosses a period because those two words actually don't have c-determining meanings, per se.
-
-29 - so ngram taggers can only tag based on contexts that they know, yes? So in the sentence:
-
-I love you
-
-It would know have 
-
-I love
-
-and 
-
-love you
-
-Would it learn the tags for those words individually? or only in those contexts? If it saw, "they love" for example, in the set, it would not know to do, right? because it doesn't know love in that particular context. So it gets all wonky. So does that mean in order for an n-gram tagger to be any good you have to have a MASSIVE training set? With as many possible permutations of the words as possible?
-
-I
-
-29 - check my thinking for this
-
-30 - the tagged sentences for the corpus returns lists of tuples. But tuples are immutable, right? So how would you go about replacing elements in them? Convert it to a list, replace them, and then revert it back to tuples? That seems ass-backwards.
+31 and 26 - i can't get their baseline code to run, let alone modify it. It seems like it just wants to run forever.
 
 To do:
 
-29 - code
-30
+
 31
 32
 33

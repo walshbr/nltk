@@ -2,7 +2,7 @@
 
 import nltk
 from nltk.corpus import brown
-
+import pylab
  	
 def performance(cfd, wordlist):
     lt = dict((word, cfd[word].max()) for word in wordlist)
@@ -10,7 +10,7 @@ def performance(cfd, wordlist):
     return nltk.tag.accuracy(baseline_tagger, nltk.corpus.brown.tagged_sents(categories='news'))
 
 def display():
-    import pylab
+
     words_by_freq = nltk.FreqDist(nltk.corpus.brown.words(categories='news')).sorted()
     cfd = nltk.ConditionalFreqDist(nltk.corpus.brown.tagged_words(categories='news'))
     sizes = 2 ** pylab.arange(15)
