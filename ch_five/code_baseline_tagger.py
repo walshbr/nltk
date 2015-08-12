@@ -1,4 +1,6 @@
 # Natural Language Toolkit: code_baseline_tagger
+import nltk
+from nltk.corpus import brown
 
 def performance(cfd, wordlist):
     lt = dict((word, cfd[word].max()) for word in wordlist)
@@ -18,3 +20,4 @@ def display():
     pylab.ylabel('Performance')
     pylab.show()
 
+display()
