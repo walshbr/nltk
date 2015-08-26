@@ -1,7 +1,5 @@
 After August 12 meeting
 
-30 - double-check that this is the correct answer for why a default and lookup tagger are needed.
-
 32 - having problems getting the brill tagger to work. can we review its documentation and whatnot. I have it SORT of functioning. but not really. could we just get one up and running? I get the idea behind them, but i need to play around with them. Just helping me work through the process of training one with some rules would help. what is the syntax for the rules? The problem i'm having is that they changed their api for the brill tagger a lot, and the nltk book seems incorrect now.
 
 To do:
