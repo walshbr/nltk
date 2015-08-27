@@ -34,9 +34,12 @@ tagged_sents = brown.tagged_sents()
 
 # go through each sentence in the corpus. 
 # go through each tag in the sentence
-for distinct_tag in distinct_tags:
-    for sent in tagged_sents:
-        for (word, tag) in sent:
-            if distinct_tag == tag:
+
+for sent in tagged_sents:
+    for (word, tag) in sent:
+        for distinct_tag in distinct_tags:
+            if distinct_tag == tag and (word == 'That' or word == 'that'):
                 print(sent)
+                distinct_tags.remove(distinct_tag)
+                print("************")
                 break

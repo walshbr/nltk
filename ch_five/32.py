@@ -12,8 +12,9 @@ templates=templates, trace=3,
 deterministic=True)
 
 brown_tagged_sents = brown.tagged_sents(categories='news')
-size = int(len(brown_tagged_sents) * 0.9)
+size = int(len(brown_tagged_sents) * 0.5)
 train_sents = brown_tagged_sents[:size]
 test_sents = brown_tagged_sents[size:]
 
-tagger = trainer.train(train_sents, max_rules=10)
+tagger = trainer.train(train_sents, max_rules=20, min_score=2, min_acc=None)
+print(tagger.evaluate(test_sents))
