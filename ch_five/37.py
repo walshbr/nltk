@@ -5,8 +5,9 @@
 
 import nltk
 from nltk.corpus import brown
-from nltk.tag.sequential import NgramTagger, UnigramTagger
+from nltk.tag.sequential import UnigramTagger
 from nltk import jsontags
+import pprint
 
 
 tagged_sents = brown.tagged_sents(categories='news')
@@ -20,24 +21,17 @@ test_sents = tagged_sents[size:]
 class PreviousTagger(UnigramTagger):
     json_tag = 'nltk.tag.sequential.PreviousTagger'
 
-    def __init__(self, train=None, model=None,
-                 backoff=None, cutoff=0, verbose=False):
-        NgramTagger.__init__(self, 1, train, model,
-                             backoff, cutoff, verbose)
-
-    def encode_json_obj(self):
-        return self._context_to_tag, self.backoff
-
-    @classmethod
-    def decode_json_obj(cls, obj):
-        _context_to_tag, backoff = obj
-        return cls(model=_context_to_tag, backoff=backoff)
-
     def context(self, tokens, index, history):
-        return tokens[index]
+        if index == 0:
+            return None
+        else:
+            return history[index-1]
 
 
-t0 = nltk.PreviousTagger(train_sents)
-t1 = nltk.UnigramTagger(train_sents, backoff=t0)
-t2 = nltk.BigramTagger(train_sents, backoff=t1)
-t3 = nltk.TrigramTagger(train_sents, backoff=t2)
+t0 = nltk.DefaultTagger('NN')
+t1 = PreviousTagger(train_sents, backoff=t0)
+t2 = nltk.UnigramTagger(train_sents, backoff=t1)
+t3 = nltk.BigramTagger(train_sents, backoff=t2)
+t4 = nltk.TrigramTagger(train_sents, backoff=t3)
+
+pprint.pprint(t4.tag(['I', 'like', 'to', 'blog', 'on', 'Kim\'s', 'blog']))
