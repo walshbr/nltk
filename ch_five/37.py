@@ -5,6 +5,8 @@
 
 import nltk
 from nltk.corpus import brown
+from nltk.tag.sequential import NgramTagger, UnigramTagger
+from nltk import jsontags
 
 
 tagged_sents = brown.tagged_sents(categories='news')
@@ -14,39 +16,9 @@ train_sents = tagged_sents[:size]
 test_sents = tagged_sents[size:]
 
 
-class UnigramTagger(NgramTagger):
-    """
-    Unigram Tagger
-
-    The UnigramTagger finds the most likely tag for each word in a training
-    corpus, and then uses that information to assign tags to new tokens.
-
-        >>> from nltk.corpus import brown
-        >>> from nltk.tag.sequential import UnigramTagger
-        >>> test_sent = brown.sents(categories='news')[0]
-        >>> unigram_tagger = UnigramTagger(brown.tagged_sents(categories='news')[:500])
-        >>> for tok, tag in unigram_tagger.tag(test_sent):
-        ...     print("(%s, %s), " % (tok, tag))
-        (The, AT), (Fulton, NP-TL), (County, NN-TL), (Grand, JJ-TL),
-        (Jury, NN-TL), (said, VBD), (Friday, NR), (an, AT),
-        (investigation, NN), (of, IN), (Atlanta's, NP$), (recent, JJ),
-        (primary, NN), (election, NN), (produced, VBD), (``, ``),
-        (no, AT), (evidence, NN), ('', ''), (that, CS), (any, DTI),
-        (irregularities, NNS), (took, VBD), (place, NN), (., .),
-
-    :param train: The corpus of training data, a list of tagged sentences
-    :type train: list(list(tuple(str, str)))
-    :param model: The tagger model
-    :type model: dict
-    :param backoff: Another tagger which this tagger will consult when it is
-        unable to tag a word
-    :type backoff: TaggerI
-    :param cutoff: The number of instances of training data the tagger must see
-        in order not to use the backoff tagger
-    :type cutoff: int
-    """
-
-    json_tag = 'nltk.tag.sequential.UnigramTagger'
+@jsontags.register_tag
+class PreviousTagger(UnigramTagger):
+    json_tag = 'nltk.tag.sequential.PreviousTagger'
 
     def __init__(self, train=None, model=None,
                  backoff=None, cutoff=0, verbose=False):
@@ -57,8 +29,7 @@ class UnigramTagger(NgramTagger):
         return self._context_to_tag, self.backoff
 
     @classmethod
-
-     def decode_json_obj(cls, obj):
+    def decode_json_obj(cls, obj):
         _context_to_tag, backoff = obj
         return cls(model=_context_to_tag, backoff=backoff)
 
@@ -66,10 +37,7 @@ class UnigramTagger(NgramTagger):
         return tokens[index]
 
 
-    @jsontags.register_tag
-
-
-t0 = nltk.DefaultTagger('NN')
+t0 = nltk.PreviousTagger(train_sents)
 t1 = nltk.UnigramTagger(train_sents, backoff=t0)
 t2 = nltk.BigramTagger(train_sents, backoff=t1)
-t3 = bltk.TrigraTagger(train_sents, backoff=t2)
+t3 = nltk.TrigramTagger(train_sents, backoff=t2)
