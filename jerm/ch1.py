@@ -1,4 +1,4 @@
-from nltk import *
+# note - not meant to be run. these are all answers as interpreter commands to go with ch1 of the nltk book.
 
 # 15
 sorted([word for word in text5 if word.startswith('b')])
@@ -16,7 +16,7 @@ sorted(set(sent1 + sent2 + sent3 + sent4 + sent5 + sent6 + sent7 + sent8))
 
 # 21
 
-text2[-2:
+text2[-2:]
 
 # 22
 
