@@ -14,11 +14,10 @@ most_freq_words = fd.most_common(100)
 likely_tags = dict((word, cfd[word].max()) for (word, _) in most_freq_words)
 baseline_tagger = nltk.UnigramTagger(model=likely_tags)
 
-
 # trained unigram tagger
 size = int(len(floresta_tagged_sents) * 0.9)
-training_data = tagged_text[:size]
-test_data = tagged_text[size:]
+training_data = floresta_tagged_sents[:size]
+test_data = (floresta_tagged_sents[size:])
 
-uni_tagger = nltk.UnigramTagger(model=training_data)
-uni_tagger.evaluate(test_data)
+uni_tagger = nltk.UnigramTagger(training_data)
+print(uni_tagger.evaluate(test_data))
